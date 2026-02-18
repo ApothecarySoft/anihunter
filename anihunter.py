@@ -6,8 +6,9 @@ from cachefiles import latestValidTagFileOrNew, loadDataFromFile, removeAllTagFi
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    "tag",
-    help="an anilist tag you're interested in",
+    "tags",
+    help="anilist tag(s) you're interested in",
+    nargs="+"
 )
 parser.add_argument(
     "-b",
@@ -23,27 +24,28 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-if args.clean:
-    removeAllTagFile(args.tag)
+for tag in args.tags:
+    if args.clean:
+        removeAllTagFile(tag)
 
-filename = latestValidTagFileOrNew(tag=args.tag, clean=False)
-prevStuff = {}
-if os.path.exists(filename):
-    prevStuff = loadDataFromFile(filename)
+    filename = latestValidTagFileOrNew(tag=tag, clean=False)
+    prevStuff = {}
+    if os.path.exists(filename):
+        prevStuff = loadDataFromFile(filename)
 
-currentStuff = fetchDataForTag(tag=args.tag)
+    currentStuff = fetchDataForTag(tag=tag)
 
-newKeys = set(currentStuff.keys()) - set(prevStuff.keys())
+    newKeys = set(currentStuff.keys()) - set(prevStuff.keys())
 
-newStuff = {k: currentStuff[k] for k in newKeys}
+    newStuff = {k: currentStuff[k] for k in newKeys}
 
-for entry in newStuff.values():
-    if args.browser:
-        url = f"https://anilist.co/{entry['type'].lower()}/{entry['id']}/"
-        webbrowser.open_new_tab(url)
+    for entry in newStuff.values():
+        if args.browser:
+            url = f"https://anilist.co/{entry['type'].lower()}/{entry['id']}/"
+            webbrowser.open_new_tab(url)
 
-    if entry["title"]["english"]:
-        print(entry["title"]["english"])
-    else:
-        print(entry["title"]["userPreferred"])
-    print(f"{entry['type']}\n")
+        if entry["title"]["english"]:
+            print(entry["title"]["english"])
+        else:
+            print(entry["title"]["userPreferred"])
+        print(f"{entry['type']}\n")
