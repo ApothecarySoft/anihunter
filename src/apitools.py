@@ -61,12 +61,3 @@ def fetchDataForTag(tag: str):
     saveUserDataFile(tag=tag, entries=entries)
     
     return entries
-
-
-def fetchDataForMedia(mediaId: int):
-
-    result = _client.execute(
-        gql(queries.animeQuery()),
-        variable_values={"id": mediaId},
-    )
-    return result["Media"]

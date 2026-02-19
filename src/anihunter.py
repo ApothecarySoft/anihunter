@@ -24,6 +24,9 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
+if not os.path.exists("../cache"):
+    os.mkdir("../cache")
+
 allNewStuff = {}
 tags: list[str] = []
 
