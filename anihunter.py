@@ -24,30 +24,42 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-for tag in args.tags:
-    if args.clean:
-        removeAllTagFile(tag)
+allNewStuff = {}
+tags: list[str] = []
 
-    filename = latestValidTagFileOrNew(tag=tag, clean=False)
+if os.path.exists(args.tags[0]):
+    with open(args.tags[0], "r") as tagFile:
+        tags = tagFile.readlines()
+else:
+    tags = args.tags
+
+for rawTag in tags:
+    cleanTag = rawTag.lower().strip()
+    if args.clean:
+        removeAllTagFile(cleanTag)
+
+    filename = latestValidTagFileOrNew(tag=cleanTag, clean=False)
     prevStuff = {}
     if os.path.exists(filename):
         prevStuff = loadDataFromFile(filename)
 
-    latestValidTagFileOrNew(tag=tag)
+    latestValidTagFileOrNew(tag=cleanTag)
 
-    currentStuff = fetchDataForTag(tag=tag)
+    currentStuff = fetchDataForTag(tag=cleanTag)
 
     newKeys = set(currentStuff.keys()) - set(prevStuff.keys())
 
     newStuff = {k: currentStuff[k] for k in newKeys}
 
-    for entry in newStuff.values():
-        if args.browser:
-            url = f"https://anilist.co/{entry['type'].lower()}/{entry['id']}/"
-            webbrowser.open_new_tab(url)
+    allNewStuff |= newStuff
 
-        if entry["title"]["english"]:
-            print(entry["title"]["english"])
-        else:
-            print(entry["title"]["userPreferred"])
-        print(f"{entry['type']}\n")
+for entry in allNewStuff.values():
+    if args.browser:
+        url = f"https://anilist.co/{entry['type'].lower()}/{entry['id']}/"
+        webbrowser.open_new_tab(url)
+
+    if entry["title"]["english"]:
+        print(entry["title"]["english"])
+    else:
+        print(entry["title"]["userPreferred"])
+    print(f"{entry['type']}\n")
