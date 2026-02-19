@@ -43,14 +43,11 @@ def latestValidTagFileOrNew(tag: str, clean=True):
     latestValidDateStamp = None
     for fileName in fileNames:
         dateStamp = _extractDateStampFromFileName(fileName=fileName)
-        if _compareDateStamps(dateStamp):
-            if not latestValidDateStamp or dateStamp > latestValidDateStamp:
-                if clean and latestValidFileName:
-                    os.remove(latestValidFileName)
-                latestValidFileName = fileName
-                latestValidDateStamp = dateStamp
-            elif clean:
-                os.remove(fileName)
+        if not latestValidDateStamp or dateStamp > latestValidDateStamp:
+            if clean and latestValidFileName:
+                os.remove(latestValidFileName)
+            latestValidFileName = fileName
+            latestValidDateStamp = dateStamp
         elif clean:
             os.remove(fileName)
     return latestValidFileName or _generateDataFileNameForUser(tag=tag)

@@ -33,6 +33,8 @@ for tag in args.tags:
     if os.path.exists(filename):
         prevStuff = loadDataFromFile(filename)
 
+    latestValidTagFileOrNew(tag=tag)
+
     currentStuff = fetchDataForTag(tag=tag)
 
     newKeys = set(currentStuff.keys()) - set(prevStuff.keys())
