@@ -2,7 +2,6 @@ from datetime import date
 from glob import glob
 import json
 import os
-import constants
 import re
 
 
@@ -10,14 +9,8 @@ def _getTodayDateStamp():
     return str(date.today()).replace("-", "")
 
 
-def _compareDateStamps(stamp1, stamp2=None, delta=constants.OLD_DATA_THRESHOLD):
-    if not stamp2:
-        stamp2 = _getTodayDateStamp()
-    return abs(int(stamp1) - int(stamp2)) <= delta
-
-
 def _generateDataFileNameForUser(tag: str):
-    return f"{_sanitizeTag(tag=tag)}-{_getTodayDateStamp()}-list.json"
+    return f"cache{os.sep}{_sanitizeTag(tag=tag)}-{_getTodayDateStamp()}-list.json"
 
 
 def saveUserDataFile(tag: str, entries: list):
@@ -32,13 +25,13 @@ def _sanitizeTag(tag: str):
 
 
 def removeAllTagFile(tag: str):
-    fileNames = glob(f"{_sanitizeTag(tag=tag)}-*-list.json")
+    fileNames = glob(f"cache{os.sep}{_sanitizeTag(tag=tag)}-*-list.json")
     for fileName in fileNames:
         os.remove(fileName)
 
 
 def latestValidTagFileOrNew(tag: str, clean=True):
-    fileNames = glob(f"{_sanitizeTag(tag=tag)}-*-list.json")
+    fileNames = glob(f"cache{os.sep}{_sanitizeTag(tag=tag)}-*-list.json")
     latestValidFileName = None
     latestValidDateStamp = None
     for fileName in fileNames:
