@@ -46,9 +46,9 @@ for rawTag in tags:
     if os.path.exists(filename):
         prevStuff = loadDataFromFile(filename)
 
-    latestValidTagFileOrNew(tag=cleanTag)
-
     currentStuff = fetchDataForTag(tag=cleanTag)
+
+    latestValidTagFileOrNew(tag=cleanTag)
 
     newKeys = set(currentStuff.keys()) - set(prevStuff.keys())
 

@@ -1,10 +1,9 @@
-import os
 import time
 from gql import gql, Client
 from gql.transport.httpx import HTTPXTransport
 from gql.transport.exceptions import TransportQueryError
 import queries
-from cachefiles import latestValidTagFileOrNew, loadDataFromFile, saveUserDataFile
+from cachefiles import saveUserDataFile
 
 
 _transport = HTTPXTransport(url="https://graphql.anilist.co", timeout=120)
