@@ -14,9 +14,7 @@ def _generateDataFileNameForUser(tag: str):
 
 
 def saveUserDataFile(tag: str, entries: list):
-    with open(
-        _generateDataFileNameForUser(tag=tag), "w"
-    ) as file:
+    with open(_generateDataFileNameForUser(tag=tag), "w") as file:
         json.dump(entries, file)
 
 

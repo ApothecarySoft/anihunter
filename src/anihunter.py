@@ -7,8 +7,8 @@ from cachefiles import latestValidTagFileOrNew, loadDataFromFile, removeAllTagFi
 parser = argparse.ArgumentParser()
 parser.add_argument(
     "tags",
-    help="anilist tag(s) you're interested in",
-    nargs="+"
+    help="anilist tag(s) you're interested in (or the path of a text file containing a list of tags on separate lines)",
+    nargs="+",
 )
 parser.add_argument(
     "-b",
@@ -20,7 +20,7 @@ parser.add_argument(
     "-c",
     "--clean",
     help="choose to clear previous run data (this cannot be undone). all media will appear as new",
-    action="store_true"
+    action="store_true",
 )
 args = parser.parse_args()
 

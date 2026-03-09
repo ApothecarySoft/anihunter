@@ -20,7 +20,12 @@ def _fetchDataForPage(page: int, tag: str):
         try:
             result = _client.execute(
                 query,
-                variable_values={"tag": tag, "sort": "ID", "status": "NOT_YET_RELEASED", "page": page},
+                variable_values={
+                    "tag": tag,
+                    "sort": "ID",
+                    "status": "NOT_YET_RELEASED",
+                    "page": page,
+                },
             )
         except TransportQueryError as e:
             errorCode = e.errors[0]["status"]
@@ -52,11 +57,9 @@ def fetchDataForTag(tag: str):
 
     while hasNextPage:
         pageNum += 1
-        newEntries, hasNextPage = _fetchDataForPage(
-            page=pageNum, tag=tag
-        )
+        newEntries, hasNextPage = _fetchDataForPage(page=pageNum, tag=tag)
         entries += newEntries
     entries = {str(x["id"]): x for x in entries}
     saveUserDataFile(tag=tag, entries=entries)
-    
+
     return entries
