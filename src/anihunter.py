@@ -8,12 +8,12 @@ parser = argparse.ArgumentParser()
 parser.add_argument(
     "tags",
     help="anilist tag(s) you're interested in (or the path of a text file containing a list of tags on separate lines)",
-    nargs="+",
+    nargs="*",
 )
 parser.add_argument(
-    "-b",
-    "--browser",
-    help="open all new things in the default browser",
+    "-l",
+    "--localized",
+    help="do NOT open pages in browser",
     action="store_true",
 )
 parser.add_argument(
@@ -24,15 +24,19 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-if not os.path.exists("../cache"):
-    os.mkdir("../cache")
-
 allNewStuff = {}
 tags: list[str] = []
 
-if os.path.exists(args.tags[0]):
-    with open(args.tags[0], "r") as tagFile:
-        tags = tagFile.readlines()
+tagFile = None
+
+if not args.tags:
+    tagFile = "tags.txt"
+elif len(args.tags == 1 and os.path.exists(args.tags[0])):
+    tagFile = args.tags[0]
+
+if tagFile:
+    with open(tagFile, "r") as tf:
+        tags = tf.readlines()
 else:
     tags = args.tags
 
@@ -56,10 +60,16 @@ for rawTag in tags:
 
     allNewStuff |= newStuff
 
+browserTabCounter = 1
+
 for entry in allNewStuff.values():
-    if args.browser:
+    if not args.localized:
         url = f"https://anilist.co/{entry['type'].lower()}/{entry['id']}/"
         webbrowser.open_new_tab(url)
+        if browserTabCounter % 10 == 0:
+            response = input(f"Press ENTER to continue ({browserTabCounter}/{len(allNewStuff)})")
+        browserTabCounter += 1
+
 
     if entry["title"]["english"]:
         print(entry["title"]["english"])

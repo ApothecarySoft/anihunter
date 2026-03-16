@@ -5,12 +5,18 @@ import os
 import re
 
 
+def getCacheDirectory():
+    path = os.path.expanduser("~/Documents/anihunter/cache")
+    os.makedirs(path, exist_ok=True)
+    return path
+
+
 def _getTodayDateStamp():
     return str(date.today()).replace("-", "")
 
 
 def _generateDataFileNameForUser(tag: str):
-    return f"cache{os.sep}{_sanitizeTag(tag=tag)}-{_getTodayDateStamp()}-list.json"
+    return f"{getCacheDirectory()}{os.sep}{_sanitizeTag(tag=tag)}-{_getTodayDateStamp()}-list.json"
 
 
 def saveUserDataFile(tag: str, entries: list):
@@ -23,13 +29,13 @@ def _sanitizeTag(tag: str):
 
 
 def removeAllTagFile(tag: str):
-    fileNames = glob(f"cache{os.sep}{_sanitizeTag(tag=tag)}-*-list.json")
+    fileNames = glob(f"{getCacheDirectory()}{os.sep}{_sanitizeTag(tag=tag)}-*-list.json")
     for fileName in fileNames:
         os.remove(fileName)
 
 
 def latestValidTagFileOrNew(tag: str, clean=True):
-    fileNames = glob(f"cache{os.sep}{_sanitizeTag(tag=tag)}-*-list.json")
+    fileNames = glob(f"{getCacheDirectory()}{os.sep}{_sanitizeTag(tag=tag)}-*-list.json")
     latestValidFileName = None
     latestValidDateStamp = None
     for fileName in fileNames:
