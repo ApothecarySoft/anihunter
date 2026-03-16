@@ -21,4 +21,7 @@ Q: Where should my tag file be?\
 A: By default, it should be in the same directory as the executable. Don't worry, though. AniHunter will make one for you if it doesn't exist and will try to open it in your default text editor for your convenience!\
 \
 Q: I encountered a problem with this program! How do I report it?\
-A: Add a new issue to the project here: https://github.com/ApothecarySoft/anihunter/issues
+A: Add a new issue to the project here: https://github.com/ApothecarySoft/anihunter/issues\
+\
+Q: Why does it only open 10 at a time?\
+A: There may be hundreds of results, especially the first time you run it. I don't want to overload your computer. Check out the first 10 results and then return to the application and press ENTER to see the next 10.\
