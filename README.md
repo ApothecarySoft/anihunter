@@ -9,7 +9,7 @@ Q: Do I need an AniList account to use this?\
 A: No you don't technically need one. The application will work just the same if you don't have one.\
 \
 Q: Do I need an internet connection to use this?\
-A: Yes.
+A: Yes.\
 \
 Q: Why is it making me wait for a countdown before it continues loading?\
 A: AniList rate-limits their API. If we make too many requests, we have to wait. Them's the rules.\
