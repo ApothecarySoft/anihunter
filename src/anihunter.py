@@ -1,7 +1,9 @@
 import argparse
 import os
+import platform
+import subprocess
 import webbrowser
-from apitools import fetchDataForTag
+from apitools import countdownTimer_s, fetchDataForTag
 from cachefiles import latestValidTagFileOrNew, loadDataFromFile, removeAllTagFile
 
 parser = argparse.ArgumentParser()
@@ -31,14 +33,31 @@ tagFile = None
 
 if not args.tags:
     tagFile = "tags.txt"
-elif len(args.tags == 1 and os.path.exists(args.tags[0])):
+elif len(args.tags) == 1 and os.path.exists(args.tags[0]):
     tagFile = args.tags[0]
 
 if tagFile:
+    if not os.path.exists(tagFile):
+        with open(tagFile, "w") as f:
+            pass
     with open(tagFile, "r") as tf:
         tags = tf.readlines()
 else:
     tags = args.tags
+
+if len(tags) == 0:
+    if tagFile:
+        print("Your tag file is empty! Here, add some tags (on separate lines)...\nOnce you've done that, try running this again!")
+        countdownTimer_s(3, silent=True)
+        if platform.system() == 'Darwin':    # macOS
+            subprocess.call(('open', tagFile))
+        elif platform.system() == 'Windows':  # Windows
+            # Use shell=True for 'start' command to work correctly
+            os.startfile(tagFile) # Or subprocess.call(('start', filepath), shell=True)
+        else:                                # Linux variants
+            # xdg-open is a standard on many Linux systems
+            subprocess.call(('xdg-open', tagFile))
+        exit(1)
 
 for rawTag in tags:
     cleanTag = rawTag.lower().strip()

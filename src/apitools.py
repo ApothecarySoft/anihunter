@@ -34,17 +34,18 @@ def _fetchDataForPage(page: int, tag: str):
                 print(
                     f"got http {errorCode}, server is rate limiting us. waiting to continue fetching data"
                 )
-                _countdownTimer_s(65)
+                countdownTimer_s(65)
             else:
                 print(f"unhandled http error {errorCode}. trying again in 10 seconds")
-                _countdownTimer_s(10)
+                countdownTimer_s(10)
     page = result["Page"]
     return page["media"], page["pageInfo"]["hasNextPage"]
 
 
-def _countdownTimer_s(seconds: int):
+def countdownTimer_s(seconds: int, silent: bool = False):
     while seconds > 0:
-        print(seconds)
+        if not silent:
+            print(seconds)
         time.sleep(1)
         seconds -= 1
 
