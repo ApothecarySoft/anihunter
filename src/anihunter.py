@@ -67,7 +67,7 @@ for entry in allNewStuff.values():
         url = f"https://anilist.co/{entry['type'].lower()}/{entry['id']}/"
         webbrowser.open_new_tab(url)
         if browserTabCounter % 10 == 0:
-            response = input(f"Press ENTER to continue ({browserTabCounter}/{len(allNewStuff)})")
+            input(f"Press ENTER to continue ({browserTabCounter}/{len(allNewStuff)})")
         browserTabCounter += 1
 
 
