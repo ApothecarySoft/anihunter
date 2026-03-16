@@ -104,3 +104,5 @@ for entry in allNewStuff.values():
     else:
         print(entry["title"]["userPreferred"])
     print(f"{entry['type']}\n")
+
+input("Press ENTER to exit")
