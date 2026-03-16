@@ -29,35 +29,41 @@ args = parser.parse_args()
 allNewStuff = {}
 tags: list[str] = []
 
-tagFile = None
+while True:
 
-if not args.tags:
-    tagFile = "tags.txt"
-elif len(args.tags) == 1 and os.path.exists(args.tags[0]):
-    tagFile = args.tags[0]
+    tagFile = None
 
-if tagFile:
-    if not os.path.exists(tagFile):
-        with open(tagFile, "w") as f:
-            pass
-    with open(tagFile, "r") as tf:
-        tags = tf.readlines()
-else:
-    tags = args.tags
+    if not args.tags:
+        tagFile = "tags.txt"
+    elif len(args.tags) == 1 and os.path.exists(args.tags[0]):
+        tagFile = args.tags[0]
 
-if len(tags) == 0:
     if tagFile:
-        print("Your tag file is empty! Here, add some tags (on separate lines)...\nOnce you've done that, try running this again!")
-        countdownTimer_s(3, silent=True)
+        if not os.path.exists(tagFile):
+            with open(tagFile, "w") as f:
+                pass
+        with open(tagFile, "r") as tf:
+            tags = tf.readlines()
+    else:
+        tags = args.tags
+
+    if len(tags) > 0:
+        break
+
+    if tagFile:
+        input("Your tag file is empty!\nPress ENTER to open the file and add some tags (on separate lines)")
         if platform.system() == 'Darwin':    # macOS
             subprocess.call(('open', tagFile))
         elif platform.system() == 'Windows':  # Windows
             # Use shell=True for 'start' command to work correctly
             os.startfile(tagFile) # Or subprocess.call(('start', filepath), shell=True)
         else:                                # Linux variants
-            # xdg-open is a standard on many Linux systems
-            subprocess.call(('xdg-open', tagFile))
-        exit(1)
+            try:
+                # xdg-open is a standard on many Linux systems
+                subprocess.call(('xdg-open', tagFile))
+            except FileNotFoundError:
+                subprocess.call(('nano', tagFile))
+        input("Once you've saved your tag file, press ENTER to retry")
 
 for rawTag in tags:
     cleanTag = rawTag.lower().strip()
@@ -80,6 +86,9 @@ for rawTag in tags:
     allNewStuff |= newStuff
 
 browserTabCounter = 1
+
+if len(allNewStuff) == 0:
+    print("Nothing new matching those tags. Add new tags or run with -c to clear cache")
 
 for entry in allNewStuff.values():
     if not args.localized:
