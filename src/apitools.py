@@ -1,7 +1,7 @@
 import time
 from gql import gql, Client
 from gql.transport.httpx import HTTPXTransport
-from gql.transport.exceptions import TransportQueryError
+from gql.transport.exceptions import TransportQueryError, TransportServerError
 import queries
 from cachefiles import saveUserDataFile
 
@@ -29,7 +29,6 @@ def _fetchDataForPage(page: int, tag: str):
             )
         except TransportQueryError as e:
             errorCode = e.errors[0]["status"]
-            retries += 1
             if errorCode == 429:
                 print(
                     f"got http {errorCode}, server is rate limiting us. waiting to continue fetching data"
@@ -38,6 +37,11 @@ def _fetchDataForPage(page: int, tag: str):
             else:
                 print(f"unhandled http error {errorCode}. trying again in 10 seconds")
                 countdownTimer_s(10)
+        except TransportServerError as e:
+            print(e)
+            countdownTimer_s(10)
+        finally:
+            retries += 1
     page = result["Page"]
     return page["media"], page["pageInfo"]["hasNextPage"]
 

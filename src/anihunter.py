@@ -52,12 +52,11 @@ while True:
 
     if tagFile:
         input("Your tag file is empty!\nPress ENTER to open the file and add some tags (on separate lines)")
-        if platform.system() == 'Darwin':    # macOS
+        if platform.system() == 'Darwin': # mac
             subprocess.call(('open', tagFile))
-        elif platform.system() == 'Windows':  # Windows
-            # Use shell=True for 'start' command to work correctly
-            os.startfile(tagFile) # Or subprocess.call(('start', filepath), shell=True)
-        else:                                # Linux variants
+        elif platform.system() == 'Windows': # Windows
+            os.startfile(tagFile)
+        else: # Linux variants
             try:
                 # xdg-open is a standard on many Linux systems
                 subprocess.call(('xdg-open', tagFile))
