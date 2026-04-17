@@ -3,7 +3,7 @@ import os
 import platform
 import subprocess
 import webbrowser
-from apitools import countdownTimer_s, fetchDataForTag
+from apitools import fetchDataForTag
 from cachefiles import latestValidTagFileOrNew, loadDataFromFile, removeAllTagFile
 
 parser = argparse.ArgumentParser()
@@ -90,18 +90,17 @@ if len(allNewStuff) == 0:
     print("Nothing new matching those tags. Add new tags or run with -c to clear cache")
 
 for entry in allNewStuff.values():
+    if entry["title"]["english"]:
+        print(entry["title"]["english"])
+    else:
+        print(entry["title"]["userPreferred"])
+    print(f"{entry['type']}\n")
+
     if not args.localized:
         url = f"https://anilist.co/{entry['type'].lower()}/{entry['id']}/"
         webbrowser.open_new_tab(url)
         if browserTabCounter % 10 == 0:
             input(f"Press ENTER to continue ({browserTabCounter}/{len(allNewStuff)})")
         browserTabCounter += 1
-
-
-    if entry["title"]["english"]:
-        print(entry["title"]["english"])
-    else:
-        print(entry["title"]["userPreferred"])
-    print(f"{entry['type']}\n")
 
 input("Press ENTER to exit")

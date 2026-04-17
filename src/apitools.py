@@ -23,7 +23,7 @@ def _fetchDataForPage(page: int, tag: str):
                 variable_values={
                     "tag": tag,
                     "sort": "ID",
-                    "status": "NOT_YET_RELEASED",
+                    "status": ["NOT_YET_RELEASED"],
                     "page": page,
                 },
             )
